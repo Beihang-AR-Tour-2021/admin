@@ -15,7 +15,7 @@ const routes = [
   },
   {
     path: '/admin',
-    redirect: '/admin/createZone'
+    redirect: '/admin/zones'
   },
   {
     path: '/admin',
@@ -26,6 +26,11 @@ const routes = [
         path: 'createZone',
         name: 'CreateZone',
         component: () => import('../view/admin/CreateZone')
+      },
+      {
+        path: 'zones',
+        name: 'ZoneList',
+        component: () => import('../view/admin/ZoneList')
       }
     ]
   }
