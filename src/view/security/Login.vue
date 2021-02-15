@@ -1,7 +1,7 @@
 <template>
   <div id="login_con">
     <Card>
-      <Form ref="formInline" :model="loginForm" :rules="loginRule">
+      <Form ref="loginForm" :model="loginForm" :rules="loginRule">
         <h2>管理员登录</h2>
         <br>
         <div style="margin-left:10%;margin-right:10%">
@@ -44,7 +44,7 @@ export default {
     handleSubmit (name) {
       this.$refs[name].validate((valid) => {
         if (valid) {
-          console.log('submit')
+          this.$router.replace('/admin')
         } else {
           this.$Message.error('请输入用户名或密码')
         }
