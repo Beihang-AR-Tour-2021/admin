@@ -2,18 +2,21 @@
   <div class="layout">
     <Layout id="admin_con">
       <Header>
-        <h1 style="color:white">智慧景区</h1>
+        <h1 style="color:white">
+          <Icon type="md-map" />
+          智慧景区
+        </h1>
       </Header>
       <Layout>
-        <Sider hide-trigger :style="{background: '#fff'}">
+        <Sider :style="{background: '#fff'}">
           <Menu active-name="1" theme="light" width="auto">
             <MenuItem name="1" to="/admin/zones">
               <Icon type="ios-map" />
-              查看景区列表
+              <span>查看景区列表</span>
             </MenuItem>
             <MenuItem name="2" to="/admin/createZone">
               <Icon type="md-pin" />
-              添加景区
+              <span>添加景区</span>
             </MenuItem>
           </Menu>
         </Sider>
@@ -27,7 +30,10 @@
 
 <script>
 export default {
-  name: 'Nav'
+  name: 'Nav',
+  data() {
+    return {}
+  }
 }
 </script>
 
@@ -46,10 +52,20 @@ export default {
 }
 
 #admin_con .ivu-menu {
+  background: #FABF40 !important;
+  color: white;
+}
+
+#admin_con .ivu-menu-item:not(.ivu-menu-item-active):hover {
+  color: darkseagreen;
+}
+
+#admin_con .ivu-menu-item-active {
   background: #F4CF90 !important;
   color: white;
 }
 
-#admin_con .ivu-menu-item {
+#admin_con .ivu-menu-item-active:after {
+  background: sienna !important;
 }
 </style>
