@@ -38,15 +38,15 @@ export default {
 }
 
 #admin_con .ivu-layout-header {
-  background: #ff9900;
+  background: #F5AE33;
 }
 
 #admin_con .ivu-layout-sider {
-  background: #FFBB66 !important;
+  background: #FABF40!important;
 }
 
 #admin_con .ivu-menu {
-  background: #FFDDAA !important;
+  background: #F4CF90 !important;
   color: white;
 }
 
