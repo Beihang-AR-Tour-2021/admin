@@ -94,6 +94,14 @@ export default {
     remove(index) {
       console.log(index)
     },
+    getZones() {
+      this.$http.get('/zone').then(res => {
+        this.zones = res.data.info
+      }).catch(err => console.log(err))
+    }
+  },
+  mounted() {
+    this.getZones()
   }
 }
 </script>
