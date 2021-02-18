@@ -60,7 +60,7 @@ export default {
     handleSubmit (name) {
       this.$refs[name].validate((valid) => {
         if (valid) {
-          this.$Message.success('');
+          // TODO: 把zoneForm的内容提供给添加景区接口
         } else {
           this.$Message.error('请检查输入格式后再提交');
         }

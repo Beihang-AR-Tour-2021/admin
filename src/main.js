@@ -29,7 +29,7 @@ axios.interceptors.request.use(config => {
 
 axios.interceptors.response.use(res => {
   console.log(res.data)
-  return res
+  return res.data
 })
 
 Vue.prototype.$http = axios
