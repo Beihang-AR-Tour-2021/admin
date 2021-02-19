@@ -1,4 +1,5 @@
 <template>
+<div>
   <Layout :style="{padding: '0 24px 24px',height: '100%'}">
     <Breadcrumb :style="{margin: '24px 0'}">
       <BreadcrumbItem>后台管理</BreadcrumbItem>
@@ -26,7 +27,7 @@
             <li @click="addSpot(index)" style="color:#2d8cf0">
               <Icon type="md-add-circle" />添加景点
             </li>
-            <li @click="remove(index)" style="color:#ed4014">
+            <li @click="remove(item)" style="color:#ed4014">
               <Icon type="md-trash" />删除
             </li>
           </template>
@@ -79,6 +80,7 @@
       <div slot="footer"></div>
     </Modal>
   </Layout>
+</div>
 </template>
 
 <script>
@@ -141,6 +143,24 @@ export default {
       this.$refs[name].validate((valid) => {
         if (valid) {
           // TODO: 把editForm传给修改景区接口
+          this.$http.put("/zone", this.editForm).then(res =>{
+            console.log(res);
+            if(res.code === 200){
+              this.$Message.success("修改景区信息成功！");
+            }
+            else if(res.code === 201){
+              this.$Message.success("已添加新的景区。");
+            }
+            else if(res.code === 401){
+              this.$Message.error("没有操作权限！");
+            }
+            else if(res.code === 403){
+              this.$Message.error("禁止操作！");
+            }
+            else if(res.code === 404){
+              this.$Message.error("修改景区失败！");
+            }
+          })
         } else {
           this.$Message.error('请检查输入格式后再提交');
         }
@@ -158,6 +178,26 @@ export default {
     remove(item) {
       // TODO: 根据item里的id删除景区
       console.log(item)
+      var id = item.zid
+      console.log(id)
+      this.$http.delete("/zone/"+id).then(res =>{
+        console.log(res);
+        if(res.code === 200){
+          this.$Message.success("删除成功！");
+        }
+        else if(res.code === 204){
+          this.$Message.error("没有内容！");
+        }
+        else if (res.code === 401){
+          this.$Message.error("没有操作权限！");
+        }
+        else if(res.code === 403){
+          this.$Message.error("禁止操作！");
+        }
+        else if(res.code === 404){
+          this.$Message.error("删除景区失败！");
+        }
+      })
     },
     // 获取全部景区
     getZones() {

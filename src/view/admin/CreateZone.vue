@@ -58,9 +58,25 @@ export default {
   },
   methods: {
     handleSubmit (name) {
+      console.log("hhh")
       this.$refs[name].validate((valid) => {
         if (valid) {
           // TODO: 把zoneForm的内容提供给添加景区接口
+          this.$http.post('/zone', this.zoneForm).then(res =>{
+            console.log(res);
+            if(res.code === 200){
+              this.$Message.success("添加成功！");
+            }
+            else if (res.code === 401){
+              this.$Message.error("无操作权限！");
+            }
+            else if (res.code === 403){
+              this.$Message.error("操作被禁止！");
+            }
+            else if(res.code === 404){
+              this.$Message.error("添加景区失败！");
+            }
+          })
         } else {
           this.$Message.error('请检查输入格式后再提交');
         }
