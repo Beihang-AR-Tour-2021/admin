@@ -55,7 +55,7 @@
       </CellGroup>
       <div slot="footer"></div>
     </Modal>
-    <Modal title="修改课程" v-model="isEditModal">
+    <Modal title="修改景区" v-model="isEditModal">
       <Form ref="zoneForm" :model="editForm" :rules="zoneRule" :label-width="100">
         <FormItem label="景区名称：" prop="name" style="width:60%">
           <Input v-model="editForm.name" placeholder=""/>
@@ -69,8 +69,11 @@
         <FormItem label="开放时间：" prop="time">
           <Input v-model="editForm.time" placeholder=""/>
         </FormItem>
-        <FormItem label="实景链接：" prop="photo">
-          <Input v-model="editForm.photo_url" placeholder=""/>
+        <FormItem label="上传图片：" prop="photo">
+          <Upload action="//jsonplaceholder.typicode.com/posts/" :before-upload="handleUpload">
+            <Button icon="ios-cloud-upload-outline">上传</Button>
+            <span v-if="file!==null" style="margin-left:16px">已接收文件：{{file.name}}</span>
+          </Upload>
         </FormItem>
         <FormItem>
           <Button type="warning" @click="handleSubmit('zoneForm')">提交</Button>
@@ -84,12 +87,15 @@
 </template>
 
 <script>
+import COS from "cos-js-sdk-v5";
+
 export default {
   name: "ZoneList",
   data() {
     return {
       loading: false,
       isDetailModal: false,
+      file: null,
       detailModal: {
         zid: 0,
         name: '',
@@ -138,31 +144,30 @@ export default {
       this.editForm.address = item.address
       this.editForm.time = item.time
       this.editForm.photo_url = item.photo_url
+      this.file = null
     },
     handleSubmit (name) {
       this.$refs[name].validate((valid) => {
         if (valid) {
-          // TODO: 把editForm传给修改景区接口
-          this.$http.put("/zone", this.editForm).then(res =>{
-            console.log(res);
-            if(res.code === 200){
-              this.$Message.success("修改景区信息成功！");
-              this.isEditModal = false
-              this.getZones()
-            }
-            else if(res.code === 201){
-              this.$Message.success("已添加新的景区。");
-            }
-            else if(res.code === 401){
-              this.$Message.error("没有操作权限！");
-            }
-            else if(res.code === 403){
-              this.$Message.error("禁止操作！");
-            }
-            else if(res.code === 404){
-              this.$Message.error("修改景区失败！");
-            }
-          })
+          if (this.file !== null) {
+            const cos = new COS({
+              SecretId: 'AKIDxhEVWOrIt0xgVGcvOca3NUM1Z1FVpgSz',
+              SecretKey: 'aw4wR3SdYlETRVL0PIvXuy9C7nAIMAjH'
+            })
+            cos.putObject({
+              Bucket: 'muyung-1302787927', /* 必须 */
+              Region: 'ap-beijing',     /* 存储桶所在地域，必须字段 */
+              Key: this.file.name,              /* 必须 */
+              StorageClass: 'STANDARD',
+              Body: this.file // 上传文件对象
+            }, (err, data) => {
+              console.log(err || data);
+              this.editForm.photo_url = 'https://muyung-1302787927.cos.ap-beijing.myqcloud.com/' + this.file.name
+              this.editZone()
+            })
+          } else {
+            this.editZone()
+          }
         } else {
           this.$Message.error('请检查输入格式后再提交');
         }
@@ -171,6 +176,32 @@ export default {
     handleReset (name) {
       this.$refs[name].resetFields();
     },
+    editZone () {
+      this.$http.put("/zone", this.editForm).then(res =>{
+        console.log(res);
+        if(res.code === 200){
+          this.$Message.success("修改景区信息成功！");
+          this.isEditModal = false
+          this.getZones()
+        }
+        else if(res.code === 201){
+          this.$Message.success("已添加新的景区。");
+        }
+        else if(res.code === 401){
+          this.$Message.error("没有操作权限！");
+        }
+        else if(res.code === 403){
+          this.$Message.error("禁止操作！");
+        }
+        else if(res.code === 404){
+          this.$Message.error("修改景区失败！");
+        }
+      })
+    },
+    handleUpload (file) {
+      this.file = file
+      return false
+    },
     // 添加景点信息
     addSpot(index) {
       // 还没想好怎么实现
@@ -178,11 +209,10 @@ export default {
     },
     // 删除景区
     remove(item) {
-      // TODO: 根据item里的id删除景区
       console.log(item)
       const id = item.zid
       console.log(id)
-      this.$http.delete("/zone/"+id).then(res =>{
+      this.$http.delete("/zone/" + id).then(res =>{
         console.log(res);
         if(res.code === 200){
           this.$Message.success("删除成功！");
