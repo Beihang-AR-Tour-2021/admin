@@ -19,9 +19,9 @@ axios.interceptors.request.use(config => {
   config.timeout = 10000
   const token = sessionStorage.getItem('token')
   if (token) {
-    config.headers.common.authorization = token
+    config.headers.common.Authorization = token
   } else {
-    config.headers.common.authorization = ''
+    config.headers.common.Authorization = ''
   }
   console.log(config)
   return config

@@ -70,7 +70,7 @@
           <Input v-model="editForm.time" placeholder=""/>
         </FormItem>
         <FormItem label="实景链接：" prop="photo">
-          <Input v-model="editForm.photo" placeholder=""/>
+          <Input v-model="editForm.photo_url" placeholder=""/>
         </FormItem>
         <FormItem>
           <Button type="warning" @click="handleSubmit('zoneForm')">提交</Button>
@@ -147,6 +147,8 @@ export default {
             console.log(res);
             if(res.code === 200){
               this.$Message.success("修改景区信息成功！");
+              this.isEditModal = false
+              this.getZones()
             }
             else if(res.code === 201){
               this.$Message.success("已添加新的景区。");
@@ -178,12 +180,13 @@ export default {
     remove(item) {
       // TODO: 根据item里的id删除景区
       console.log(item)
-      var id = item.zid
+      const id = item.zid
       console.log(id)
       this.$http.delete("/zone/"+id).then(res =>{
         console.log(res);
         if(res.code === 200){
           this.$Message.success("删除成功！");
+          this.getZones()
         }
         else if(res.code === 204){
           this.$Message.error("没有内容！");

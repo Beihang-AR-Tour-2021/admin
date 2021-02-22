@@ -22,7 +22,7 @@
             <Input v-model="zoneForm.time" placeholder=""/>
           </FormItem>
           <FormItem label="实景链接：" prop="photo">
-            <Input v-model="zoneForm.photo" placeholder=""/>
+            <Input v-model="zoneForm.photo_url" placeholder=""/>
           </FormItem>
           <FormItem>
             <Button type="warning" @click="handleSubmit('zoneForm')">提交</Button>
@@ -44,7 +44,7 @@ export default {
         info: '',
         address: '',
         time: '',
-        photo: ''
+        photo_url: ''
       },
       zoneRule: {
         name: [
